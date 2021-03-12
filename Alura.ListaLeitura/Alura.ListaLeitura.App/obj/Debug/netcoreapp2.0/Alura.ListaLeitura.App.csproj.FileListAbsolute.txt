@@ -22,3 +22,5 @@ C:\Users\mathf\Documents\Clone\Asp.NET Core\Alura.ListaLeitura\Alura.ListaLeitur
 C:\Users\mathf\Documents\Clone\Asp.NET Core\Alura.ListaLeitura\Alura.ListaLeitura.App\obj\Debug\netcoreapp2.0\Alura.ListaLeitura.App.dll
 C:\Users\mathf\Documents\Clone\Asp.NET Core\Alura.ListaLeitura\Alura.ListaLeitura.App\obj\Debug\netcoreapp2.0\Alura.ListaLeitura.App.pdb
 C:\Users\mathf\Documents\Clone\Asp.NET Core\Alura.ListaLeitura\Alura.ListaLeitura.App\obj\Debug\netcoreapp2.0\Alura.ListaLeitura.App.genruntimeconfig.cache
+C:\Users\mathf\Documents\Clone\Asp.NET Core\Alura.ListaLeitura\Alura.ListaLeitura.App\bin\Debug\netcoreapp2.0\HTML\formulario.html
+C:\Users\mathf\Documents\Clone\Asp.NET Core\Alura.ListaLeitura\Alura.ListaLeitura.App\bin\Debug\netcoreapp2.0\HTML\para-ler.html
