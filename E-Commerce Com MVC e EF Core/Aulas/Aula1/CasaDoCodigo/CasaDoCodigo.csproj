@@ -33,6 +33,12 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\js\Carrinho.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="dotnet restore" />
   </Target>
