@@ -2,7 +2,10 @@
 using CasaDoCodigo.Models.ViewModels;
 using CasaDoCodigo.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CasaDoCodigo.Controllers
 {
@@ -12,8 +15,7 @@ namespace CasaDoCodigo.Controllers
         private readonly IPedidoRepository pedidoRepository;
         private readonly IItemPedidoRepository itemPedidoRepository;
 
-        public PedidoController(
-            IProdutoRepository produtoRepository,
+        public PedidoController(IProdutoRepository produtoRepository,
             IPedidoRepository pedidoRepository,
             IItemPedidoRepository itemPedidoRepository)
         {
@@ -22,38 +24,52 @@ namespace CasaDoCodigo.Controllers
             this.itemPedidoRepository = itemPedidoRepository;
         }
 
-        public IActionResult Carrossel()
+        public async Task<IActionResult> Carrossel()
         {
-            return View(produtoRepository.GetProdutos());
+            return View(await produtoRepository.GetProdutos());
         }
 
-        public IActionResult Carrinho(string codigo)
+        public async Task<IActionResult> Carrinho(string codigo)
         {
             if (!string.IsNullOrEmpty(codigo))
             {
-                pedidoRepository.AddItem(codigo);
+                await pedidoRepository.AddItem(codigo);
             }
 
-            List<ItemPedido> itens = pedidoRepository.GetPedido().Itens;
+            Pedido pedido = await pedidoRepository.GetPedido();
+            List<ItemPedido> itens = pedido.Itens;
             CarrinhoViewModel carrinhoViewModel = new CarrinhoViewModel(itens);
-            return View(carrinhoViewModel);
+            return base.View(carrinhoViewModel);
         }
 
-        public IActionResult Cadastro()
+        public async Task<IActionResult> Cadastro()
         {
-            return View();
-        }
+            var pedido = await pedidoRepository.GetPedido();
 
-        public IActionResult Resumo()
-        {
-            Pedido pedido = pedidoRepository.GetPedido();
-            return View(pedido);
+            if (pedido == null)
+            {
+                return RedirectToAction("Carrossel");
+            }
+
+            return View(pedido.Cadastro);
         }
 
         [HttpPost]
-        public UpdateQuantidadeResponse UpdateQuantidade([FromBody] ItemPedido itemPedido)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Resumo(Cadastro cadastro)
         {
-            return pedidoRepository.UpdateQuantidade(itemPedido);
+            if (ModelState.IsValid)
+            {
+                return View(await pedidoRepository.UpdateCadastro(cadastro));
+            }
+            return RedirectToAction("Cadastro");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<UpdateQuantidadeResponse> UpdateQuantidade([FromBody] ItemPedido itemPedido)
+        {
+            return await pedidoRepository.UpdateQuantidade(itemPedido);
         }
     }
 }

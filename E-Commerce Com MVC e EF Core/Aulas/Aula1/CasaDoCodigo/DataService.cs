@@ -4,33 +4,38 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using static CasaDoCodigo.Repositories.ProdutoRepository;
+using System.Threading.Tasks;
 
 namespace CasaDoCodigo
 {
-    public class DataService : IDataService
+    class DataService : IDataService
     {
         private readonly ApplicationContext contexto;
         private readonly IProdutoRepository produtoRepository;
-        public DataService(ApplicationContext contexto, IProdutoRepository produtoRepository)
+
+        public DataService(ApplicationContext contexto,
+            IProdutoRepository produtoRepository)
         {
             this.contexto = contexto;
             this.produtoRepository = produtoRepository;
         }
 
-        public void InicializaDB()
+        public async Task InicializaDB()
         {
-            contexto.Database.EnsureCreated();
-            List<Livro> livros = GetLivros();
+            await contexto.Database.MigrateAsync();
 
-            produtoRepository.SaveProdutos(livros);
-        }       
+            List<Livro> livros = await GetLivros();
 
-        private static List<Livro> GetLivros()
+            await produtoRepository.SaveProdutos(livros);
+        }
+
+        private static async Task<List<Livro>> GetLivros()
         {
-            var json = File.ReadAllText("livros.json");
-            List<Livro> livros = JsonConvert.DeserializeObject<List<Livro>>(json);
+            var json = await File.ReadAllTextAsync("livros.json");
+            var livros = JsonConvert.DeserializeObject<List<Livro>>(json);
             return livros;
         }
     }
+
+
 }
